@@ -1,0 +1,7 @@
+.style-classed-text-area {
+    -fx-text-fill: red;
+    -fx-font-size: 1.5em;
+}
+.style-classed-text-area .content {
+    -fx-background-color: #0000FF;
+}

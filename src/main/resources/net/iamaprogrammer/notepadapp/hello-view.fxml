@@ -4,10 +4,11 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-
-<VBox fx:id="main_container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
+<GridPane fx:id="main_container" prefHeight="375.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
    <children>
       <MenuBar>
         <menus>
@@ -31,6 +32,13 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane fx:id="note_tab_pane" prefHeight="376.0" prefWidth="600.0" />
+      <TabPane fx:id="note_tab_pane" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" />
    </children>
-</VBox>
+   <columnConstraints>
+      <ColumnConstraints percentWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints valignment="TOP" />
+      <RowConstraints percentHeight="100.0" valignment="TOP" />
+   </rowConstraints>
+</GridPane>

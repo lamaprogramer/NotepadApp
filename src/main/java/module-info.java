@@ -6,6 +6,7 @@ module net.iamaprogrammer.notepadapp {
     requires validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires org.fxmisc.richtext;
 
     opens net.iamaprogrammer.notepadapp to javafx.fxml;
     exports net.iamaprogrammer.notepadapp;
