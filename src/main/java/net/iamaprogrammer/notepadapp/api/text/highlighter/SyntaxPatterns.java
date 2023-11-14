@@ -6,8 +6,7 @@ public enum SyntaxPatterns {
     BRACE("\\{|\\}"),
     SEMICOLON("\\;"),
     STRING("\"([^\"\\\\]|\\\\.)*\""),
-
-    NUMBER("\\b[0-9]*\\.[0-9]*\\b|\\b[0-9]*\\b");
+    NUMBER("\\b[^\\D]\\d*\\.\\b|\\b\\d*\\b");
 
     private final String pattern;
     SyntaxPatterns(String pattern) {
