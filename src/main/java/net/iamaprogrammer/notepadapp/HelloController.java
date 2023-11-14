@@ -3,6 +3,8 @@ package net.iamaprogrammer.notepadapp;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -16,6 +18,7 @@ import net.iamaprogrammer.notepadapp.api.Note;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.HighlightingEngine;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.JavaLanguage;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
@@ -30,6 +33,9 @@ public class HelloController implements Initializable {
     private GridPane main_container;
     @FXML
     private TabPane note_tab_pane;
+
+
+    private static final HighlightingEngine highlighingEngine = new HighlightingEngine(new JavaLanguage());
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,7 +65,6 @@ public class HelloController implements Initializable {
 
 
     protected Tab createNoteTab(Note note) {
-        HighlightingEngine engine = new HighlightingEngine(new JavaLanguage());
         Tab tab = new Tab(note.getTitle());
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
@@ -67,20 +72,21 @@ public class HelloController implements Initializable {
         box.maxHeightProperty().bind(this.note_tab_pane.heightProperty());
 
         tab.setContent(box);
-        StyleClassedTextArea text = new StyleClassedTextArea();
+        CodeArea text = new CodeArea();
         applyStyles(text);
         text.setId("note-area");
 
+        text.setParagraphGraphicFactory(LineNumberFactory.get(text));
         text.prefHeightProperty().bind(note_tab_pane.heightProperty());
-        text.textProperty().addListener((observable, oldValue, newValue) -> {
-            text.clearStyle(0, text.getLength());
-            text.setStyleSpans(0, engine.render(newValue));
-        });
-
         text.appendText(note.getBody());
-        text.setStyleSpans(0, engine.render(text.getText()));
-        //text.wrappingWidthProperty().bind(box.maxWidthProperty().divide(2));
+        highlighingEngine.addTask(text, tab);
+
         box.getChildren().add(text);
+        tab.setOnClosed(event -> {
+            highlighingEngine.getProcesses().get(tab.hashCode()).interrupt();
+            highlighingEngine.getProcesses().remove(tab.hashCode());
+            System.out.println("Terminated thread");
+        });
         return tab;
     }
 

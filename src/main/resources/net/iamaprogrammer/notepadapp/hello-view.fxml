@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="main_container" prefHeight="375.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
+<GridPane fx:id="main_container" prefHeight="375.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
    <children>
       <MenuBar>
         <menus>
