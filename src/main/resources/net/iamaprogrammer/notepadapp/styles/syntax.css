@@ -1,3 +1,9 @@
-.brace {
-    -fx-fill: red;
+.keyword, .semicolon {
+    -fx-fill: #CC7832;
+}
+.string {
+    -fx-fill: #6A8759;
+}
+.number {
+    -fx-fill: #6897BB;
 }

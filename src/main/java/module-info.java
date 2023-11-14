@@ -11,4 +11,6 @@ module net.iamaprogrammer.notepadapp {
     opens net.iamaprogrammer.notepadapp to javafx.fxml;
     exports net.iamaprogrammer.notepadapp;
     exports net.iamaprogrammer.notepadapp.api;
+    exports net.iamaprogrammer.notepadapp.api.gui;
+    exports net.iamaprogrammer.notepadapp.api.text.highlighter;
 }

@@ -10,7 +10,17 @@ public class JavaLanguage implements LanguageHighlight {
 
     @Override
     public String[] keywords() {
-        return new String[]{"package", "import", "public", "private", "protected", "class", "enum", "record"};
+        return new String[]{"abstract",	"continue",	"for", "new", "switch",
+            "assert", "default", "goto", "package",	"synchronized",
+            "boolean", "do", "if", "private", "this",
+            "break", "double", "implements", "protected", "throw",
+            "byte",	"else",	"import", "public", "throws",
+            "case",	"enum",	"instanceof","return", "transient",
+            "catch", "extends", "int", "short", "try",
+            "char", "final", "interface", "static", "void",
+            "class", "finally","long","strictfp","volatile",
+            "const", "float", "native", "super", "while"
+        };
     }
 
     @Override
@@ -19,7 +29,9 @@ public class JavaLanguage implements LanguageHighlight {
                 SyntaxPatterns.BRACE,
                 SyntaxPatterns.BRACKET,
                 SyntaxPatterns.PARENTHESIS,
-                SyntaxPatterns.SEMICOLON
+                SyntaxPatterns.SEMICOLON,
+                SyntaxPatterns.STRING,
+                SyntaxPatterns.NUMBER
         };
     }
 }

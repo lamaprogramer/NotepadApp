@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.iamaprogrammer.notepadapp.api.Note;
+import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.HighlightingEngine;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.JavaLanguage;
 import org.fxmisc.richtext.CodeArea;
@@ -34,19 +35,56 @@ public class HelloController implements Initializable {
     @FXML
     private TabPane note_tab_pane;
 
-
-    private static final HighlightingEngine highlighingEngine = new HighlightingEngine(new JavaLanguage());
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        this.note_tab_pane.getSelectionModel().selectedItemProperty().addListener((observableValue, oldTab, newTab) -> {
+            HelloApplication.highlighingEngine.setSelectedTab((CodeTab) newTab);
+        });
     }
 
     @FXML
     protected void addNote(ActionEvent event) {
         this.note_tab_pane.getTabs().add(this.createNoteTab(new Note(
                     "New Tab",
-                    "{This is some note content. }"
+"""
+package net.iamaprogrammer.notepadapp;
+                        
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import net.iamaprogrammer.notepadapp.api.text.highlighter.HighlightingEngine;
+import net.iamaprogrammer.notepadapp.api.text.highlighter.SyntaxPatterns;
+                        
+import java.io.IOException;
+                        
+public class HelloApplication extends Application {
+    public static final HighlightingEngine highlighingEngine = new HighlightingEngine();
+    public static final String text1 = "some random text";
+    
+    @Override
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 720, 480.087);
+        scene.getStylesheets().add(getClass().getResource("styles/main.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("styles/syntax.css").toExternalForm());
+        stage.setTitle("Hello!");
+        stage.setScene(scene);
+        stage.show();
+    }
+                        
+    @Override
+    public void stop() throws Exception {
+        highlighingEngine.getService().shutdown();
+    }
+                        
+    public static void main(String[] args) {
+        System.out.println(SyntaxPatterns.BRACKET);
+        launch();
+                        
+    }
+}
+"""
         )));
     }
 
@@ -61,32 +99,28 @@ public class HelloController implements Initializable {
         )));
     }
 
-
-
-
-    protected Tab createNoteTab(Note note) {
-        Tab tab = new Tab(note.getTitle());
+    protected CodeTab createNoteTab(Note note) {
+        CodeTab tab = new CodeTab(new JavaLanguage(), note.getTitle());
         VBox box = new VBox();
         box.setAlignment(Pos.CENTER);
         box.maxWidthProperty().bind(this.note_tab_pane.widthProperty());
         box.maxHeightProperty().bind(this.note_tab_pane.heightProperty());
-
         tab.setContent(box);
+
         CodeArea text = new CodeArea();
         applyStyles(text);
         text.setId("note-area");
+        text.textProperty().addListener((observable, oldValue, newValue) -> {
+            HelloApplication.highlighingEngine.setChangeMade(!newValue.isEmpty());
+        });
 
         text.setParagraphGraphicFactory(LineNumberFactory.get(text));
         text.prefHeightProperty().bind(note_tab_pane.heightProperty());
         text.appendText(note.getBody());
-        highlighingEngine.addTask(text, tab);
+        tab.setCodeArea(text);
 
-        box.getChildren().add(text);
-        tab.setOnClosed(event -> {
-            highlighingEngine.getProcesses().get(tab.hashCode()).interrupt();
-            highlighingEngine.getProcesses().remove(tab.hashCode());
-            System.out.println("Terminated thread");
-        });
+
+        box.getChildren().add(tab.getCodeArea());
         return tab;
     }
 

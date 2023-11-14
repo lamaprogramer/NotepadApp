@@ -4,7 +4,10 @@ public enum SyntaxPatterns {
     PARENTHESIS("\\(|\\)"),
     BRACKET("\\[|\\]"),
     BRACE("\\{|\\}"),
-    SEMICOLON("\\;");
+    SEMICOLON("\\;"),
+    STRING("\"([^\"\\\\]|\\\\.)*\""),
+
+    NUMBER("\\b[0-9]*\\.[0-9]*\\b|\\b[0-9]*\\b");
 
     private final String pattern;
     SyntaxPatterns(String pattern) {

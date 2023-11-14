@@ -1,38 +1,50 @@
 package net.iamaprogrammer.notepadapp.api.text.highlighter;
 
-import javafx.scene.control.Tab;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.HighlightingProcess;
+import javafx.application.Platform;
+import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HighlightingEngine {
-    private final Map<Integer, HighlightingProcess> PROCESSES = new HashMap<>();
+    private final ExecutorService service;
     private LanguageHighlight language;
+    private CodeTab selectedTab;
+    private CodeArea codeArea;
+    private boolean changeMade = true;
 
-    public HighlightingEngine(LanguageHighlight language) {
-        this.language = language;
+    public HighlightingEngine() {
+        this.service = Executors.newSingleThreadExecutor();
 
-//        ExecutorService service = Executors.newSingleThreadExecutor();
-//        service.execute(() -> {
-//
-//        });
+        this.service.execute(() -> {
+            while (!this.service.isShutdown()) {
+                if (this.selectedTab != null && this.language != null && this.changeMade) {
+                    this.changeMade = false;
+                    System.out.println("Set style at tab: "+this.selectedTab);
+                    Platform.runLater(() -> {
+                        this.codeArea.clearStyle(0, this.codeArea.getLength());
+                        this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
+                    });
+                }
+            }
+        });
     }
 
-    public void addTask(CodeArea area, Tab tab) {
-        HighlightingProcess process = new HighlightingProcess(area, this::render);
-        PROCESSES.put(tab.hashCode(), process);
+    public void setSelectedTab(CodeTab selectedTab) {
+        this.selectedTab = selectedTab;
+        if (selectedTab != null) {
+            this.language = selectedTab.getLanguage();
+            this.codeArea = selectedTab.getCodeArea();
+            this.changeMade = true;
+        }
     }
-
 
     private String fromSyntaxPattern() {
         StringBuilder builder = new StringBuilder();
@@ -82,7 +94,10 @@ public class HighlightingEngine {
     public void setLanguage(LanguageHighlight language) {
         this.language = language;
     }
-    public Map<Integer, HighlightingProcess> getProcesses() {
-        return this.PROCESSES;
+    public ExecutorService getService() {
+        return this.service;
+    }
+    public void setChangeMade(boolean bool) {
+        this.changeMade = true;
     }
 }
