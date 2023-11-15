@@ -11,10 +11,11 @@ public class Templates {
         try {
             URL url = HelloApplication.class.getResource("templates/"+name+".txt");
             System.out.println("templates"+File.separator+name+".txt");
-            File file = new File(url.getPath());
-            return Files.readString(file.toPath());
-        } catch (Exception ignored) {
-            return "";
-        }
+            if (url != null) {
+                File file = new File(url.getPath());
+                return Files.readString(file.toPath());
+            }
+        } catch (Exception ignored) {}
+        return "";
     }
 }

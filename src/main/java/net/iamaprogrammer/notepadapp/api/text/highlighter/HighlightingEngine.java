@@ -27,9 +27,7 @@ public class HighlightingEngine {
 
     public void applyHighlighting() {
         if (this.language != null) {
-            Platform.runLater(() -> {
-                this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
-            });
+            Platform.runLater(() -> this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText())));
         }
     }
 
@@ -45,7 +43,7 @@ public class HighlightingEngine {
         return Pattern.compile("(?<KEYWORD>" + "\\b("+String.join("|",this.language.keywords())+")\\b" + ")" + this.fromSyntaxPattern());
     }
 
-    private String findStyleClass(Matcher matcher) {
+    private String chooseStyleClass(Matcher matcher) {
         if (matcher.group("KEYWORD") != null) {
             return "keyword";
         }
@@ -63,7 +61,7 @@ public class HighlightingEngine {
 
         StyleSpansBuilder<Collection<String>> builder = new StyleSpansBuilder<>();
         while (matcher.find()) {
-            String styleClass = this.findStyleClass(matcher);
+            String styleClass = this.chooseStyleClass(matcher);
             builder.add(Collections.emptyList(), matcher.start() - lastMatch);
             builder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             lastMatch = matcher.end();

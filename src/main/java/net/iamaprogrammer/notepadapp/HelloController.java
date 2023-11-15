@@ -1,6 +1,5 @@
 package net.iamaprogrammer.notepadapp;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -14,11 +13,8 @@ import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Languages;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Templates;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.JavaLanguage;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.PythonLanguage;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.StyleClassedTextArea;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,21 +30,19 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.note_tab_pane.getSelectionModel().selectedItemProperty().addListener((observableValue, oldTab, newTab) -> {
-            HelloApplication.highlightingEngine.setSelectedTab((CodeTab) newTab);
-        });
+        this.note_tab_pane.getSelectionModel().selectedItemProperty().addListener((observableValue, oldTab, newTab) ->
+                HelloApplication.highlightingEngine.setSelectedTab((CodeTab) newTab));
     }
 
     @FXML
-    protected void addNote(ActionEvent event) {
-        this.note_tab_pane.getTabs().add(this.createNoteTab(new Note(
-                    "New Tab",
-                        Templates.get("python")
-        )));
+    protected void addNote() {
+        // Create new note.
+        this.note_tab_pane.getTabs().add(this.createNoteTab(new Note("New Tab", Templates.get("python"))));
     }
 
     @FXML
-    protected void openNote(ActionEvent event) throws IOException {
+    protected void openNote() throws IOException {
+        // Select file from user's desktop.
         Stage stage = (Stage) this.main_container.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
@@ -68,23 +62,18 @@ public class HelloController implements Initializable {
         tab.setContent(box);
 
         CodeArea text = new CodeArea();
-        applyStyles(text);
+        text.setStyle("-fx-font-size: "+24);
         text.setId("note-area");
-        text.textProperty().addListener((observable, oldValue, newValue) -> {
-            HelloApplication.highlightingEngine.applyHighlighting();
-        });
+        // Update highlighting engine.
+        text.textProperty().addListener((observable, oldValue, newValue) ->
+                HelloApplication.highlightingEngine.applyHighlighting());
 
-        text.setParagraphGraphicFactory(LineNumberFactory.get(text));
+        text.setParagraphGraphicFactory(LineNumberFactory.get(text)); // Line numbers.
         text.prefHeightProperty().bind(note_tab_pane.heightProperty());
         text.appendText(note.getBody());
         tab.setCodeArea(text);
 
-
         box.getChildren().add(tab.getCodeArea());
         return tab;
-    }
-
-    protected void applyStyles(StyleClassedTextArea text) {
-        text.setStyle("-fx-font-size: "+24);
     }
 }
