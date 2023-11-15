@@ -31,7 +31,9 @@ public class JavaLanguage implements LanguageHighlight {
                 SyntaxPatterns.PARENTHESIS,
                 SyntaxPatterns.SEMICOLON,
                 SyntaxPatterns.STRING,
-                SyntaxPatterns.NUMBER
+                SyntaxPatterns.NUMBER,
+                SyntaxPatterns.COMMENT,
+                SyntaxPatterns.ANNOTATION
         };
     }
 }

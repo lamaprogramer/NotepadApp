@@ -1,14 +1,9 @@
 package net.iamaprogrammer.notepadapp;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -16,12 +11,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.iamaprogrammer.notepadapp.api.Note;
 import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.HighlightingEngine;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.JavaLanguage;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +31,7 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.note_tab_pane.getSelectionModel().selectedItemProperty().addListener((observableValue, oldTab, newTab) -> {
-            HelloApplication.highlighingEngine.setSelectedTab((CodeTab) newTab);
+            HelloApplication.highlightingEngine.setSelectedTab((CodeTab) newTab);
         });
     }
 
@@ -111,7 +104,7 @@ public class HelloApplication extends Application {
         applyStyles(text);
         text.setId("note-area");
         text.textProperty().addListener((observable, oldValue, newValue) -> {
-            HelloApplication.highlighingEngine.setChangeMade(!newValue.isEmpty());
+            HelloApplication.highlightingEngine.applyHighlighting();
         });
 
         text.setParagraphGraphicFactory(LineNumberFactory.get(text));

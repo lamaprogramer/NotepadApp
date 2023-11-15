@@ -8,42 +8,25 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HighlightingEngine {
-    private final ExecutorService service;
     private LanguageHighlight language;
-    private CodeTab selectedTab;
     private CodeArea codeArea;
-    private boolean changeMade = true;
-
-    public HighlightingEngine() {
-        this.service = Executors.newSingleThreadExecutor();
-
-        this.service.execute(() -> {
-            while (!this.service.isShutdown()) {
-                if (this.selectedTab != null && this.language != null && this.changeMade) {
-                    this.changeMade = false;
-                    System.out.println("Set style at tab: "+this.selectedTab);
-                    Platform.runLater(() -> {
-                        this.codeArea.clearStyle(0, this.codeArea.getLength());
-                        this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
-                    });
-                }
-            }
-        });
-    }
 
     public void setSelectedTab(CodeTab selectedTab) {
-        this.selectedTab = selectedTab;
         if (selectedTab != null) {
             this.language = selectedTab.getLanguage();
             this.codeArea = selectedTab.getCodeArea();
-            this.changeMade = true;
+            this.applyHighlighting();
         }
+    }
+
+    public void applyHighlighting() {
+        Platform.runLater(() -> {
+            this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
+        });
     }
 
     private String fromSyntaxPattern() {
@@ -81,23 +64,6 @@ public class HighlightingEngine {
             builder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
             lastMatch = matcher.end();
         }
-        //builder.add(Collections.emptyList(), text.length() - lastMatch);
-        StyleSpans<Collection<String>> styles = builder.create();
-        //System.out.println(styles);
-        return styles;
-    }
-
-    public LanguageHighlight getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(LanguageHighlight language) {
-        this.language = language;
-    }
-    public ExecutorService getService() {
-        return this.service;
-    }
-    public void setChangeMade(boolean bool) {
-        this.changeMade = true;
+        return builder.create();
     }
 }

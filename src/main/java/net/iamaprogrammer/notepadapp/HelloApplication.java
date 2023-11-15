@@ -10,7 +10,7 @@ import net.iamaprogrammer.notepadapp.api.text.highlighter.SyntaxPatterns;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
-    public static final HighlightingEngine highlighingEngine = new HighlightingEngine();
+    public static final HighlightingEngine highlightingEngine = new HighlightingEngine();
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
@@ -20,11 +20,6 @@ public class HelloApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
-    }
-
-    @Override
-    public void stop() throws Exception {
-        highlighingEngine.getService().shutdown();
     }
 
     public static void main(String[] args) {

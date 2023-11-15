@@ -6,7 +6,9 @@ public enum SyntaxPatterns {
     BRACE("\\{|\\}"),
     SEMICOLON("\\;"),
     STRING("\"([^\"\\\\]|\\\\.)*\""),
-    NUMBER("\\b[^\\D]\\d*\\.\\b|\\b\\d*\\b");
+    NUMBER("\\b(\\d+)(\\.\\d+)?\\b"),
+    COMMENT("//[^\n]*|/\\*(.|\\R)*?\\*/"),
+    ANNOTATION("@\\w+");
 
     private final String pattern;
     SyntaxPatterns(String pattern) {

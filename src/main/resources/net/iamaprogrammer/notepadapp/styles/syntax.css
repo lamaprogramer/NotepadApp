@@ -7,3 +7,9 @@
 .number {
     -fx-fill: #6897BB;
 }
+.comment {
+    -fx-fill: #808080;
+}
+.annotation {
+    -fx-fill: #BBB529;
+}
