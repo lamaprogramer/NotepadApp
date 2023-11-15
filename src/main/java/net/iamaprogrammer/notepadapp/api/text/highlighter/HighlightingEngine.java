@@ -19,14 +19,18 @@ public class HighlightingEngine {
         if (selectedTab != null) {
             this.language = selectedTab.getLanguage();
             this.codeArea = selectedTab.getCodeArea();
-            this.applyHighlighting();
+            if (this.language != null) {
+                this.applyHighlighting();
+            }
         }
     }
 
     public void applyHighlighting() {
-        Platform.runLater(() -> {
-            this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
-        });
+        if (this.language != null) {
+            Platform.runLater(() -> {
+                this.codeArea.setStyleSpans(0, this.render(this.codeArea.getText()));
+            });
+        }
     }
 
     private String fromSyntaxPattern() {

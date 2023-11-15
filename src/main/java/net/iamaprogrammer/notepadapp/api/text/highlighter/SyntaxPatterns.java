@@ -8,6 +8,7 @@ public enum SyntaxPatterns {
     STRING("\"([^\"\\\\]|\\\\.)*\""),
     NUMBER("\\b(\\d+)(\\.\\d+)?\\b"),
     COMMENT("//[^\n]*|/\\*(.|\\R)*?\\*/"),
+    COMMENTPYTHON("#[^\n]*"),
     ANNOTATION("@\\w+");
 
     private final String pattern;
