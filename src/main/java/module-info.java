@@ -2,6 +2,7 @@ module net.iamaprogrammer.notepadapp {
     requires javafx.controls;
     requires javafx.fxml;
 
+    requires reactfx;
     requires org.controlsfx.controls;
     requires validatorfx;
     requires org.kordamp.ikonli.javafx;

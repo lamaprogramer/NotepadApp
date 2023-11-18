@@ -3,17 +3,21 @@ package net.iamaprogrammer.notepadapp;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.iamaprogrammer.notepadapp.api.Note;
 import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
+import net.iamaprogrammer.notepadapp.api.gui.RichCodeArea;
+import net.iamaprogrammer.notepadapp.api.gui.RichTextStyleClass;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Languages;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Templates;
-import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.File;
@@ -27,16 +31,23 @@ public class HelloController implements Initializable {
     private GridPane main_container;
     @FXML
     private TabPane note_tab_pane;
+    @FXML
+    private ButtonBar style_bar;
+
+    private RichTextStyleClass textStyle;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.note_tab_pane.getSelectionModel().selectedItemProperty().addListener((observableValue, oldTab, newTab) ->
-                HelloApplication.highlightingEngine.setSelectedTab((CodeTab) newTab));
+        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+        colorPicker.setOnAction(actionEvent -> {
+            this.textStyle = new RichTextStyleClass();
+            this.textStyle.setColor(colorPicker.getValue());
+        });
+        this.style_bar.getButtons().add(colorPicker);
     }
 
     @FXML
     protected void addNote() {
-        // Create new note.
         this.note_tab_pane.getTabs().add(this.createNoteTab(new Note("New Tab", Templates.get("python"))));
     }
 
@@ -61,17 +72,22 @@ public class HelloController implements Initializable {
         box.maxHeightProperty().bind(this.note_tab_pane.heightProperty());
         tab.setContent(box);
 
-        CodeArea text = new CodeArea();
-        text.setStyle("-fx-font-size: "+24);
-        text.setId("note-area");
+        RichCodeArea textArea = new RichCodeArea((instance, change) -> {
+            int to = change.getInsertionEnd();
+            int from = to - change.getInserted().length();
+            if (from < to && this.textStyle != null) {
+                instance.setStyle(from, to, this.textStyle);
+            }
+            return true;
+        }).withHighlighting(tab.getLanguage());
+        textArea.setStyle("-fx-font-size: "+24);
+        textArea.setId("note-area");
         // Update highlighting engine.
-        text.textProperty().addListener((observable, oldValue, newValue) ->
-                HelloApplication.highlightingEngine.applyHighlighting());
-
-        text.setParagraphGraphicFactory(LineNumberFactory.get(text)); // Line numbers.
-        text.prefHeightProperty().bind(note_tab_pane.heightProperty());
-        text.appendText(note.getBody());
-        tab.setCodeArea(text);
+        textArea.setParagraphGraphicFactory(LineNumberFactory.get(textArea)); // Line numbers.
+        textArea.prefHeightProperty().bind(note_tab_pane.heightProperty());
+        textArea.appendText(note.getBody());
+        //text.setTextInsertionStyle(Collections.);
+        tab.setCodeArea(textArea);
 
         box.getChildren().add(tab.getCodeArea());
         return tab;
