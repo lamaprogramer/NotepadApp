@@ -9,7 +9,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="main_container" prefHeight="375.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
+<?import net.iamaprogrammer.notepadapp.api.gui.TextEditor?>
+<GridPane fx:id="main_container" prefHeight="375.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.iamaprogrammer.notepadapp.HelloController">
    <children>
       <MenuBar>
         <menus>
@@ -33,8 +34,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane fx:id="note_tab_pane" prefHeight="356.0" prefWidth="600.0" GridPane.rowIndex="2" />
-      <ButtonBar fx:id="style_bar" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1" />
+       <TextEditor fx:id="text_editor" GridPane.rowIndex="2"/>
+<!--      <TabPane fx:id="note_tab_pane" prefHeight="356.0" prefWidth="600.0" GridPane.rowIndex="2" />-->
+<!--      <ButtonBar fx:id="style_bar" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1" />-->
    </children>
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" percentWidth="100.0" />

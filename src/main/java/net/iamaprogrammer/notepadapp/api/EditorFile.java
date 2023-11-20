@@ -1,23 +1,23 @@
 package net.iamaprogrammer.notepadapp.api;
 
-public class Note {
+public class EditorFile {
     private String title;
     private String header;
     private String body;
     private String footer;
 
-    public Note(String header, String body, String footer) {
+    public EditorFile(String header, String body, String footer) {
         this.header = header;
         this.body = body;
         this.footer = footer;
     }
 
-    public Note(String title, String body) {
+    public EditorFile(String title, String body) {
         this.title = title;
         this.body = body;
     }
 
-    public Note(String body) {
+    public EditorFile(String body) {
         this.body = body;
     }
 

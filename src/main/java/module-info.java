@@ -1,15 +1,15 @@
 module net.iamaprogrammer.notepadapp {
+
+    requires javafx.base;
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
 
     requires reactfx;
-    requires org.controlsfx.controls;
-    requires validatorfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
     requires org.fxmisc.richtext;
 
     opens net.iamaprogrammer.notepadapp to javafx.fxml;
+    opens net.iamaprogrammer.notepadapp.api.gui to javafx.fxml;
     exports net.iamaprogrammer.notepadapp;
     exports net.iamaprogrammer.notepadapp.api;
     exports net.iamaprogrammer.notepadapp.api.gui;

@@ -18,8 +18,17 @@ public class RichTextStyleClass {
         this.styleClasses = Collections.emptyList();
     }
 
-    public RichTextStyleClass(Collection<String> styleClasses) {
+    public RichTextStyleClass(Collection<String> styleClasses, Color color, boolean bold, boolean italic) {
         this.styleClasses = styleClasses;
+        this.color = color;
+        this.bold = bold;
+        this.italic = italic;
+    }
+    public RichTextStyleClass(Collection<String> styleClasses) {
+        this(styleClasses, null, false, false);
+    }
+    public RichTextStyleClass(RichTextStyleClass copy) {
+        this(copy.styleClasses, copy.color, copy.bold, copy.italic);
     }
     public Collection<String> getStyleClasses() {
         return this.styleClasses;
@@ -55,5 +64,17 @@ public class RichTextStyleClass {
     public RichTextStyleClass setColor(Color color) {
         this.color = color;
         return this;
+    }
+    public void fromStyle(Styles style, boolean value) {
+        switch (style) {
+            case BOLD -> this.bold = value;
+            case ITALIC -> this.italic = value;
+        }
+    }
+    public void fromStyle(Styles style) {
+        switch (style) {
+            case BOLD -> this.bold = !this.bold;
+            case ITALIC -> this.italic = !this.italic;
+        }
     }
 }

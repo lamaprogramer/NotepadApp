@@ -2,23 +2,16 @@ package net.iamaprogrammer.notepadapp;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.iamaprogrammer.notepadapp.api.Note;
+import net.iamaprogrammer.notepadapp.api.EditorFile;
 import net.iamaprogrammer.notepadapp.api.gui.CodeTab;
-import net.iamaprogrammer.notepadapp.api.gui.RichCodeArea;
 import net.iamaprogrammer.notepadapp.api.gui.RichTextStyleClass;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
-import net.iamaprogrammer.notepadapp.api.text.highlighter.Languages;
+import net.iamaprogrammer.notepadapp.api.gui.Styles;
+import net.iamaprogrammer.notepadapp.api.gui.TextEditor;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Templates;
-import org.fxmisc.richtext.LineNumberFactory;
+import net.iamaprogrammer.notepadapp.api.text.highlighter.languages.PythonLanguage;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,25 +23,29 @@ public class HelloController implements Initializable {
     @FXML
     private GridPane main_container;
     @FXML
-    private TabPane note_tab_pane;
-    @FXML
-    private ButtonBar style_bar;
+    private TextEditor text_editor;
+//    @FXML
+//    private TabPane note_tab_pane;
+//    @FXML
+//    private ButtonBar style_bar;
 
-    private RichTextStyleClass textStyle;
+    private final RichTextStyleClass textStyle = new RichTextStyleClass();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
-        colorPicker.setOnAction(actionEvent -> {
-            this.textStyle = new RichTextStyleClass();
-            this.textStyle.setColor(colorPicker.getValue());
-        });
-        this.style_bar.getButtons().add(colorPicker);
+        this.addNote();
+
+//        ColorPicker colorPicker = new ColorPicker(Color.BLACK);
+//        colorPicker.setOnAction(actionEvent -> {
+//            this.textStyle.setColor(colorPicker.getValue());
+//        });
+//        this.style_bar.getButtons().add(colorPicker);
     }
 
     @FXML
     protected void addNote() {
-        this.note_tab_pane.getTabs().add(this.createNoteTab(new Note("New Tab", Templates.get("python"))));
+        this.text_editor.addTab(new EditorFile("New Tab", Templates.get("python")), true);
+        this.text_editor.addButton(Styles.BOLD);
     }
 
     @FXML
@@ -57,39 +54,40 @@ public class HelloController implements Initializable {
         Stage stage = (Stage) this.main_container.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
-        this.note_tab_pane.getTabs().add(this.createNoteTab(new Note(
+        this.text_editor.addTab(new EditorFile(
                         file.getName(),
                         Files.readString(file.toPath())
-        )));
+        ), true);
     }
 
-    protected CodeTab createNoteTab(Note note) {
-        LanguageHighlight highlight = Languages.generateFromFile(note.getTitle());
-        CodeTab tab = new CodeTab(highlight, note.getTitle());
-        VBox box = new VBox();
-        box.setAlignment(Pos.CENTER);
-        box.maxWidthProperty().bind(this.note_tab_pane.widthProperty());
-        box.maxHeightProperty().bind(this.note_tab_pane.heightProperty());
-        tab.setContent(box);
-
-        RichCodeArea textArea = new RichCodeArea((instance, change) -> {
-            int to = change.getInsertionEnd();
-            int from = to - change.getInserted().length();
-            if (from < to && this.textStyle != null) {
-                instance.setStyle(from, to, this.textStyle);
-            }
-            return true;
-        }).withHighlighting(tab.getLanguage());
-        textArea.setStyle("-fx-font-size: "+24);
-        textArea.setId("note-area");
-        // Update highlighting engine.
-        textArea.setParagraphGraphicFactory(LineNumberFactory.get(textArea)); // Line numbers.
-        textArea.prefHeightProperty().bind(note_tab_pane.heightProperty());
-        textArea.appendText(note.getBody());
-        //text.setTextInsertionStyle(Collections.);
-        tab.setCodeArea(textArea);
-
-        box.getChildren().add(tab.getCodeArea());
-        return tab;
+    protected CodeTab createNoteTab(EditorFile note) {
+//        LanguageHighlight highlight = Languages.generateFromFile(note.getTitle());
+//        CodeTab tab = new CodeTab(highlight, note.getTitle());
+//        VBox box = new VBox();
+//        box.setAlignment(Pos.CENTER);
+//        box.maxWidthProperty().bind(this.note_tab_pane.widthProperty());
+//        box.maxHeightProperty().bind(this.note_tab_pane.heightProperty());
+//        tab.setContent(box);
+//
+//        RichCodeArea textArea = new RichCodeArea((instance, change) -> {
+//            int to = change.getInsertionEnd();
+//            int from = to - change.getInserted().length();
+//            if (from < to) {
+//                instance.setStyle(from, to, new RichTextStyleClass(this.textStyle));
+//            }
+//            return true;
+//        }).withHighlighting(tab.getLanguage());
+//        textArea.setStyle("-fx-font-size: "+24);
+//        textArea.setId("note-area");
+//        // Update highlighting engine.
+//        textArea.setParagraphGraphicFactory(LineNumberFactory.get(textArea)); // Line numbers.
+//        textArea.prefHeightProperty().bind(note_tab_pane.heightProperty());
+//        textArea.appendText(note.getBody());
+//        //text.setTextInsertionStyle(Collections.);
+//        tab.setCodeArea(textArea);
+//
+//        box.getChildren().add(tab.getCodeArea());
+//        return tab;
+        return new CodeTab(new PythonLanguage(), "");
     }
 }

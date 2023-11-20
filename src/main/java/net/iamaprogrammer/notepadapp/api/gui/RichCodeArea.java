@@ -47,6 +47,13 @@ public class RichCodeArea extends StyledTextArea<Collection<String>, RichTextSty
                 });
     }
 
+    @Override
+    public void appendText(String text) {
+        super.appendText(text);
+        this.insertText(0, "");
+        this.requestFollowCaret();
+    }
+
     public RichCodeArea(boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
         this(new SimpleEditableStyledDocument<>(Collections.emptyList(), new RichTextStyleClass()), preserveStyle, apply);
 
