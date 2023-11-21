@@ -2,14 +2,13 @@ package net.iamaprogrammer.notepadapp.api.gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.NodeOrientation;
-import javafx.geometry.Pos;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.iamaprogrammer.notepadapp.HelloApplication;
 import net.iamaprogrammer.notepadapp.api.EditorFile;
+import net.iamaprogrammer.notepadapp.api.gui.buttons.StyleColorPicker;
+import net.iamaprogrammer.notepadapp.api.gui.buttons.StyleToggleButton;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Languages;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -20,7 +19,7 @@ public class TextEditor extends VBox {
     @FXML
     private TabPane text_editor_pane;
     @FXML
-    private ButtonBar style_bar;
+    private HBox style_bar;
     private final RichTextStyleClass textStyle = new RichTextStyleClass();
 
     public TextEditor() {
@@ -34,11 +33,10 @@ public class TextEditor extends VBox {
             throw new RuntimeException(e);
         }
     }
-
     private void initGraphics() {
         this.text_editor_pane.prefHeightProperty().bind(this.heightProperty().subtract(this.style_bar.heightProperty()));
-        this.style_bar.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-        this.setStyleBarVisible(false);
+        this.style_bar.setStyle("-fx-padding: 0; -fx-font-size: 18;");
+        //this.setStyleBarVisible(false);
     }
     public boolean isStyleBarVisible() {
         return this.style_bar.isVisible();
@@ -75,11 +73,20 @@ public class TextEditor extends VBox {
         box.getChildren().add(tab.getCodeArea());
         this.text_editor_pane.getTabs().add(tab);
     }
-    public void addButton(Styles style) {
-        StyleButton button = new StyleButton(style, (styleCss) -> {
+    public void addToggleButton(String name, Styles style) {
+        StyleToggleButton button = new StyleToggleButton(name, style, (styleCss) -> {
             this.textStyle.fromStyle(styleCss);
             return true;
         });
-        this.style_bar.getButtons().add(button);
+        button.prefWidthProperty().bind(button.heightProperty());
+        this.style_bar.getChildren().add(button);
+    }
+    public void addColorPicker() {
+        StyleColorPicker button = new StyleColorPicker((color) -> {
+            this.textStyle.setColor(color);
+            return true;
+        });
+        //button.prefWidthProperty().bind(button.heightProperty());
+        this.style_bar.getChildren().add(button);
     }
 }

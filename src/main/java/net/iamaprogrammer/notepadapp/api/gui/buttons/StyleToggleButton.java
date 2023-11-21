@@ -1,17 +1,16 @@
-package net.iamaprogrammer.notepadapp.api.gui;
+package net.iamaprogrammer.notepadapp.api.gui.buttons;
 
-import javafx.css.Style;
-import javafx.scene.Node;
 import javafx.scene.control.ToggleButton;
+import net.iamaprogrammer.notepadapp.api.gui.Styles;
 
 import java.util.function.Function;
 
-public class StyleButton extends ToggleButton {
+public class StyleToggleButton extends ToggleButton {
 
     private final Styles style;
     private final Function<Styles, Boolean> applyStyle;
-    public StyleButton(Styles style, Function<Styles, Boolean> applyStyle) {
-        super();
+    public StyleToggleButton(String name, Styles style, Function<Styles, Boolean> applyStyle) {
+        super(name);
         this.style = style;
         this.applyStyle = applyStyle;
     }
