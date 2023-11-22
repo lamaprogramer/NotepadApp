@@ -2,7 +2,6 @@ package net.iamaprogrammer.notepadapp.api.gui;
 
 import javafx.scene.control.Tab;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
-import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.StyledTextArea;
 
 public class CodeTab extends Tab {

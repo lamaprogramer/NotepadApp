@@ -2,17 +2,17 @@ package net.iamaprogrammer.notepadapp.api.gui;
 
 import javafx.application.Platform;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.SyntaxPatterns;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.model.*;
 import org.reactfx.Subscription;
 
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,11 +23,16 @@ public class RichCodeArea extends StyledTextArea<Collection<String>, RichTextSty
 
     public RichCodeArea(EditableStyledDocument<Collection<String>, String, RichTextStyleClass> document, boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
         super(Collections.emptyList(),
-                (paragraph, styleClasses) -> paragraph.getStyleClass().addAll(styleClasses),
+                (paragraph, styleClasses) -> {
+                    paragraph.getStyleClass().addAll(styleClasses);
+                    paragraph.setTextAlignment(TextAlignment.RIGHT);
+                    System.out.println(paragraph.getTextAlignment());
+                },
                 new RichTextStyleClass(),
                 (Text text, RichTextStyleClass styleClass) -> {
                     text.getStyleClass().addAll(styleClass.getStyleClasses());
                     text.setStyle(styleClass.toCSS());
+                    //text.setTextAlignment(TextAlignment.RIGHT);
 
                 }, document, preserveStyle);
 

@@ -6,7 +6,6 @@ import net.iamaprogrammer.notepadapp.api.gui.Styles;
 import java.util.function.Function;
 
 public class StyleToggleButton extends ToggleButton {
-
     private final Styles style;
     private final Function<Styles, Boolean> applyStyle;
     public StyleToggleButton(String name, Styles style, Function<Styles, Boolean> applyStyle) {

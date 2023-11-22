@@ -26,6 +26,8 @@ public class HelloController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.text_editor.addToggleButton("B", Styles.BOLD);
         this.text_editor.addToggleButton("I", Styles.ITALIC);
+        this.text_editor.addToggleButton("U", Styles.UNDERLINE);
+        this.text_editor.addToggleButton("S", Styles.STRIKETHROUGH);
         this.text_editor.addColorPicker();
         this.addNote();
     }

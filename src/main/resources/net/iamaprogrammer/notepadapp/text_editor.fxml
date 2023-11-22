@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
     <HBox fx:id="style_bar"/>
     <TabPane fx:id="text_editor_pane"/>
