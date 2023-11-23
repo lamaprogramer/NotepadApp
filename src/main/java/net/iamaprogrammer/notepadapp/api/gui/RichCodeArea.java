@@ -2,38 +2,34 @@ package net.iamaprogrammer.notepadapp.api.gui;
 
 import javafx.application.Platform;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import net.iamaprogrammer.notepadapp.api.gui.styles.RichParagraphStyleClass;
+import net.iamaprogrammer.notepadapp.api.gui.styles.RichTextStyleClass;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.SyntaxPatterns;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.richtext.model.*;
 import org.reactfx.Subscription;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RichCodeArea extends StyledTextArea<Collection<String>, RichTextStyleClass> {
+public class RichCodeArea extends StyledTextArea<RichParagraphStyleClass, RichTextStyleClass> {
 
     private final Subscription subscription;
     private LanguageHighlight language;
 
-    public RichCodeArea(EditableStyledDocument<Collection<String>, String, RichTextStyleClass> document, boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
-        super(Collections.emptyList(),
+    public RichCodeArea(EditableStyledDocument<RichParagraphStyleClass, String, RichTextStyleClass> document, boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
+        super(new RichParagraphStyleClass(),
                 (paragraph, styleClasses) -> {
-                    paragraph.getStyleClass().addAll(styleClasses);
-                    paragraph.setTextAlignment(TextAlignment.RIGHT);
-                    System.out.println(paragraph.getTextAlignment());
+                    paragraph.getStyleClass().addAll(styleClasses.getStyleClasses());
+                    paragraph.setStyle(styleClasses.toCSS());
                 },
                 new RichTextStyleClass(),
                 (Text text, RichTextStyleClass styleClass) -> {
                     text.getStyleClass().addAll(styleClass.getStyleClasses());
                     text.setStyle(styleClass.toCSS());
-                    //text.setTextAlignment(TextAlignment.RIGHT);
-
                 }, document, preserveStyle);
 
         this.subscription = this.multiPlainChanges()
@@ -60,11 +56,11 @@ public class RichCodeArea extends StyledTextArea<Collection<String>, RichTextSty
     }
 
     public RichCodeArea(boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
-        this(new SimpleEditableStyledDocument<>(Collections.emptyList(), new RichTextStyleClass()), preserveStyle, apply);
+        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, apply);
 
     }
     public RichCodeArea(boolean preserveStyle) {
-        this(new SimpleEditableStyledDocument<>(Collections.emptyList(), new RichTextStyleClass()), preserveStyle, null);
+        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, null);
     }
     public RichCodeArea(BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
         this(true, apply);
@@ -81,9 +77,9 @@ public class RichCodeArea extends StyledTextArea<Collection<String>, RichTextSty
             Platform.runLater(() -> this.setStyleSpans(start, this.render(text)));
         }
     }
-    public void applyHighlighting(int paragraph, int start, StyledTextArea<Collection<String>, RichTextStyleClass> code) {
+    public void applyHighlighting(int paragraph, int start, StyledTextArea<RichParagraphStyleClass, RichTextStyleClass> code) {
         if (this.language != null) {
-            Paragraph<Collection<String>, String, RichTextStyleClass> text = code.getParagraph(paragraph);
+            Paragraph<RichParagraphStyleClass, String, RichTextStyleClass> text = code.getParagraph(paragraph);
             Platform.runLater(() -> {
                 try {
                     this.setStyleSpans(paragraph, start, this.render(text.getText()));

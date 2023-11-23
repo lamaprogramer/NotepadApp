@@ -1,4 +1,4 @@
-package net.iamaprogrammer.notepadapp.api.gui;
+package net.iamaprogrammer.notepadapp.api.gui.styles;
 
 import javafx.scene.paint.Color;
 
@@ -43,7 +43,8 @@ public class RichTextStyleClass {
         css += this.strikethrough ? "-fx-strikethrough: true;" : "";
         return css;
     }
-    public void fromStyle(Styles style, boolean value) {
+
+    public void fromStyle(TextStyles style, boolean value) {
         switch (style) {
             case BOLD -> this.bold = value;
             case ITALIC -> this.italic = value;
@@ -51,7 +52,7 @@ public class RichTextStyleClass {
             case STRIKETHROUGH -> this.strikethrough = value;
         }
     }
-    public void fromStyle(Styles style) {
+    public void fromStyle(TextStyles style) {
         switch (style) {
             case BOLD -> this.bold = !this.bold;
             case ITALIC -> this.italic = !this.italic;

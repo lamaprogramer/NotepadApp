@@ -3,10 +3,11 @@ package net.iamaprogrammer.notepadapp;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.iamaprogrammer.notepadapp.api.EditorFile;
-import net.iamaprogrammer.notepadapp.api.gui.Styles;
+import net.iamaprogrammer.notepadapp.api.gui.styles.TextStyles;
 import net.iamaprogrammer.notepadapp.api.gui.TextEditor;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Templates;
 
@@ -24,10 +25,12 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.text_editor.addToggleButton("B", Styles.BOLD);
-        this.text_editor.addToggleButton("I", Styles.ITALIC);
-        this.text_editor.addToggleButton("U", Styles.UNDERLINE);
-        this.text_editor.addToggleButton("S", Styles.STRIKETHROUGH);
+        this.text_editor.addToggleButton("B", TextStyles.BOLD);
+        this.text_editor.addToggleButton("I", TextStyles.ITALIC);
+        this.text_editor.addToggleButton("U", TextStyles.UNDERLINE);
+        this.text_editor.addToggleButton("S", TextStyles.STRIKETHROUGH);
+
+        this.text_editor.addToggleButton("P", TextAlignment.RIGHT);
         this.text_editor.addColorPicker();
         this.addNote();
     }
