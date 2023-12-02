@@ -4,5 +4,5 @@ public enum TextStyles {
     BOLD,
     ITALIC,
     UNDERLINE,
-    STRIKETHROUGH
+    STRIKETHROUGH;
 }

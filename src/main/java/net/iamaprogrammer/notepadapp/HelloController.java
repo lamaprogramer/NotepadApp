@@ -3,13 +3,18 @@ package net.iamaprogrammer.notepadapp;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.iamaprogrammer.notepadapp.api.EditorFile;
 import net.iamaprogrammer.notepadapp.api.gui.styles.TextStyles;
-import net.iamaprogrammer.notepadapp.api.gui.TextEditor;
+import net.iamaprogrammer.notepadapp.api.gui.editor.TextEditor;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.Bold;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.Italic;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.Strikethrough;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.Underline;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.Templates;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignF;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,12 +30,13 @@ public class HelloController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.text_editor.addToggleButton("B", TextStyles.BOLD);
-        this.text_editor.addToggleButton("I", TextStyles.ITALIC);
-        this.text_editor.addToggleButton("U", TextStyles.UNDERLINE);
-        this.text_editor.addToggleButton("S", TextStyles.STRIKETHROUGH);
+        this.text_editor.addToggleButton(new FontIcon(MaterialDesignF.FORMAT_BOLD), Bold.INSTANCE);
+        this.text_editor.addToggleButton(new FontIcon(MaterialDesignF.FORMAT_ITALIC), Italic.INSTANCE);
+        this.text_editor.addToggleButton(new FontIcon(MaterialDesignF.FORMAT_UNDERLINE), Underline.INSTANCE);
+        this.text_editor.addToggleButton(new FontIcon(MaterialDesignF.FORMAT_STRIKETHROUGH), Strikethrough.INSTANCE);
 
-        this.text_editor.addToggleButton("P", TextAlignment.RIGHT);
+        this.text_editor.addAlignmentButtons();
+        //this.text_editor.addToggleButton("P", TextAlignment.RIGHT);
         this.text_editor.addColorPicker();
         this.addNote();
     }

@@ -1,13 +1,16 @@
 package net.iamaprogrammer.notepadapp.api.gui.styles;
 
-import javafx.scene.text.TextAlignment;
-
 public enum ParagraphStyles {
-    ALIGNMENT;
+    ALIGNMENT_LEFT("-fx-text-alignment: left;"),
+    ALIGNMENT_RIGHT("-fx-text-alignment: right;"),
+    ALIGNMENT_CENTER("-fx-text-alignment: center;"),
+    ALIGNMENT_JUSTIFY("-fx-text-alignment: justify;");
 
-
-    ParagraphStyles(TextAlignment alignment) {
-
+    private final String style;
+    ParagraphStyles(String style) {
+        this.style = style;
     }
-    ParagraphStyles() {}
+    public String getStyle() {
+        return style;
+    }
 }

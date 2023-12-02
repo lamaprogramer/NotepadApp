@@ -3,7 +3,8 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import net.iamaprogrammer.notepadapp.api.gui.editor.EditorTabPane?>
 <fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml">
     <HBox fx:id="style_bar"/>
-    <TabPane fx:id="text_editor_pane"/>
+    <EditorTabPane fx:id="text_editor_pane"/>
 </fx:root>

@@ -1,50 +1,68 @@
 package net.iamaprogrammer.notepadapp.api.gui.styles;
 
-import javafx.scene.text.TextAlignment;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.Alignment;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.StyleFormat;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class RichParagraphStyleClass {
     private final Collection<String> styleClasses;
-    private TextAlignment alignment = TextAlignment.LEFT;
-    public RichParagraphStyleClass(Collection<String> styleClasses, TextAlignment alignment) {
+    private final Map<String, StyleFormat<?>> defaultStyles;
+    private final Map<String, StyleFormat<?>> paragraphStyles;
+
+
+    public RichParagraphStyleClass(Collection<String> styleClasses, Map<String, StyleFormat<?>> paragraphStyles, Map<String, StyleFormat<?>> defaultStyles) {
         this.styleClasses = styleClasses;
-        this.alignment = alignment;
+        this.defaultStyles = defaultStyles;
+
+        if (!defaultStyles.isEmpty()) {
+            defaultStyles.forEach(paragraphStyles::putIfAbsent);
+        }
+        this.paragraphStyles = paragraphStyles;
+    }
+    public RichParagraphStyleClass(Collection<String> styleClasses, Map<String, StyleFormat<?>> paragraphStyles) {
+        this(styleClasses, paragraphStyles, new HashMap<>());
+    }
+    public RichParagraphStyleClass(Map<String, StyleFormat<?>> paragraphStyles) {
+        this(Collections.emptyList(), paragraphStyles);
+        //System.out.println(this.paragraphStyles);
     }
     public RichParagraphStyleClass(Collection<String> styleClasses) {
-        this.styleClasses = styleClasses;
+        this(styleClasses, new HashMap<>());
     }
     public RichParagraphStyleClass(RichParagraphStyleClass copy) {
-        this(copy.styleClasses, copy.alignment);
+        this(copy.styleClasses, new HashMap<>(copy.paragraphStyles), new HashMap<>(copy.defaultStyles));
     }
     public RichParagraphStyleClass() {
         this(Collections.emptyList());
     }
 
-    public String toCSS() {
-        String css = "";
-        css += alignment != null ? "-fx-text-alignment: "+this.alignment.name().toLowerCase()+";" : "";
-        return css;
-    }
-
-    public void fromStyle(TextStyles style, boolean value) {
-        switch (style) {
-
-        }
-    }
-    public void fromStyle(TextStyles style) {
-        switch (style) {
-
-        }
-    }
     public Collection<String> getStyleClasses() {
-        return styleClasses;
+        return this.styleClasses;
     }
-    public TextAlignment getAlignment() {
-        return this.alignment;
+    public String toCSS() {
+        StringBuilder css = new StringBuilder();
+        for (StyleFormat<?> format : this.paragraphStyles.values()) {
+            css.append(format.getCSS());
+        }
+        return css.toString();
     }
-    public void setAlignment(TextAlignment alignment) {
-        this.alignment = alignment;
+    public void updateStyle(StyleFormat<?> style, boolean criteria) {
+        if (this.paragraphStyles.get(style.getName()) == null || criteria) {
+            this.paragraphStyles.put(style.getName(), style);
+        } else {
+            this.paragraphStyles.remove(style.getName());
+        }
+    }
+    public void addStyle(StyleFormat<?> style) {
+        this.paragraphStyles.put(style.getName(), style);
+    }
+    public <S extends StyleFormat<?>> S getStyle(String name) {
+        //System.out.println(name);
+        return (S)this.paragraphStyles.get(name);
     }
 }

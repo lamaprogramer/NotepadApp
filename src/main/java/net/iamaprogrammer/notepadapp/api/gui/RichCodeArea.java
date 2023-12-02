@@ -1,7 +1,6 @@
 package net.iamaprogrammer.notepadapp.api.gui;
 
 import javafx.application.Platform;
-import javafx.scene.text.Text;
 import net.iamaprogrammer.notepadapp.api.gui.styles.RichParagraphStyleClass;
 import net.iamaprogrammer.notepadapp.api.gui.styles.RichTextStyleClass;
 import net.iamaprogrammer.notepadapp.api.text.highlighter.LanguageHighlight;
@@ -16,18 +15,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RichCodeArea extends StyledTextArea<RichParagraphStyleClass, RichTextStyleClass> {
-
     private final Subscription subscription;
     private LanguageHighlight language;
 
-    public RichCodeArea(EditableStyledDocument<RichParagraphStyleClass, String, RichTextStyleClass> document, boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
-        super(new RichParagraphStyleClass(),
+    public RichCodeArea(
+            EditableStyledDocument<RichParagraphStyleClass, String, RichTextStyleClass> document,
+            boolean preserveStyle,
+            BiFunction<RichCodeArea, PlainTextChange, Boolean> apply,
+            RichParagraphStyleClass defaultParagraphStyle,
+            RichTextStyleClass defaultTextStyle
+    ) {
+        super(defaultParagraphStyle,
                 (paragraph, styleClasses) -> {
                     paragraph.getStyleClass().addAll(styleClasses.getStyleClasses());
                     paragraph.setStyle(styleClasses.toCSS());
                 },
-                new RichTextStyleClass(),
-                (Text text, RichTextStyleClass styleClass) -> {
+                defaultTextStyle,
+                (text, styleClass) -> {
                     text.getStyleClass().addAll(styleClass.getStyleClasses());
                     text.setStyle(styleClass.toCSS());
                 }, document, preserveStyle);
@@ -48,25 +52,28 @@ public class RichCodeArea extends StyledTextArea<RichParagraphStyleClass, RichTe
                 });
     }
 
+    public RichCodeArea(EditableStyledDocument<RichParagraphStyleClass, String, RichTextStyleClass> document, boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
+        this(document, preserveStyle, apply, new RichParagraphStyleClass(), new RichTextStyleClass());
+    }
+    public RichCodeArea(boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
+        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, apply);
+    }
+    public RichCodeArea(BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
+        this(true, apply);
+    }
+    public RichCodeArea(boolean preserveStyle) {
+        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, null);
+    }
+    public RichCodeArea() {
+        this(true);
+    }
+
+
     @Override
     public void appendText(String text) {
         super.appendText(text);
         this.insertText(0, "");
         this.requestFollowCaret();
-    }
-
-    public RichCodeArea(boolean preserveStyle, BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
-        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, apply);
-
-    }
-    public RichCodeArea(boolean preserveStyle) {
-        this(new SimpleEditableStyledDocument<>(new RichParagraphStyleClass(), new RichTextStyleClass()), preserveStyle, null);
-    }
-    public RichCodeArea(BiFunction<RichCodeArea, PlainTextChange, Boolean> apply) {
-        this(true, apply);
-    }
-    public RichCodeArea() {
-        this(true);
     }
     public RichCodeArea withHighlighting(LanguageHighlight language) {
         this.language = language;

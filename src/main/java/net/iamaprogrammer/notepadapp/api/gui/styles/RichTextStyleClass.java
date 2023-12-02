@@ -1,93 +1,48 @@
 package net.iamaprogrammer.notepadapp.api.gui.styles;
 
-import javafx.scene.paint.Color;
+import net.iamaprogrammer.notepadapp.api.gui.styles.format.StyleFormat;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RichTextStyleClass {
     private final Collection<String> styleClasses;
-    private Color color;
-    private boolean bold = false;
-    private boolean italic = false;
-    private boolean underline = false;
-    private boolean strikethrough = false;
+    private final Map<String, StyleFormat<?>> textStyles;
 
-    public RichTextStyleClass() {
-        this.styleClasses = Collections.emptyList();
-    }
-
-    public RichTextStyleClass(Collection<String> styleClasses, Color color, boolean bold, boolean italic, boolean underline, boolean strikethrough) {
+    public RichTextStyleClass(Collection<String> styleClasses, Map<String, StyleFormat<?>> textStyles) {
         this.styleClasses = styleClasses;
-        this.color = color;
-        this.bold = bold;
-        this.italic = italic;
-        this.underline = underline;
-        this.strikethrough = strikethrough;
+        this.textStyles = textStyles;
     }
     public RichTextStyleClass(Collection<String> styleClasses) {
-        this(styleClasses, null, false, false, false, false);
+        this(styleClasses, new HashMap<>());
     }
     public RichTextStyleClass(RichTextStyleClass copy) {
-        this(copy.styleClasses, copy.color, copy.bold, copy.italic, copy.underline, copy.strikethrough);
+        this(copy.styleClasses, new HashMap<>(copy.textStyles));
+    }
+    public RichTextStyleClass() {
+        this(Collections.emptyList());
     }
     public Collection<String> getStyleClasses() {
         return this.styleClasses;
     }
-    public String toCSS() {
-        String css = "";
-        css += this.color != null ? "-fx-fill: "+this.color.toString().replaceFirst("0x", "#")+";" : "";
-        css += this.bold ? "-fx-font-weight: bold;" : "";
-        css += this.italic ? "-fx-font-style: italic;" : "";
-        css += this.underline ? "-fx-underline: true;" : "";
-        css += this.strikethrough ? "-fx-strikethrough: true;" : "";
-        return css;
-    }
 
-    public void fromStyle(TextStyles style, boolean value) {
-        switch (style) {
-            case BOLD -> this.bold = value;
-            case ITALIC -> this.italic = value;
-            case UNDERLINE -> this.underline = value;
-            case STRIKETHROUGH -> this.strikethrough = value;
+    public String toCSS() {
+        StringBuilder css = new StringBuilder();
+        for (StyleFormat<?> format : this.textStyles.values()) {
+            css.append(format.getCSS());
+        }
+        return css.toString();
+    }
+    public void updateStyle(StyleFormat<?> style, boolean criteria) {
+        if (this.textStyles.get(style.getName()) == null || criteria) {
+            this.textStyles.put(style.getName(), style);
+        } else {
+            this.textStyles.remove(style.getName());
         }
     }
-    public void fromStyle(TextStyles style) {
-        switch (style) {
-            case BOLD -> this.bold = !this.bold;
-            case ITALIC -> this.italic = !this.italic;
-            case UNDERLINE -> this.underline = !this.underline;
-            case STRIKETHROUGH -> this.strikethrough = !this.strikethrough;
-        }
-    }
-    public Color getColor() {
-        return color;
-    }
-    public void setColor(Color color) {
-        this.color = color;
-    }
-    public boolean isBold() {
-        return this.bold;
-    }
-    public void setBold(boolean bold) {
-        this.bold = bold;
-    }
-    public boolean isItalic() {
-        return this.italic;
-    }
-    public void setItalic(boolean italic) {
-        this.italic = italic;
-    }
-    public boolean isUnderline() {
-        return underline;
-    }
-    public void setUnderline(boolean underline) {
-        this.underline = underline;
-    }
-    public boolean isStrikethrough() {
-        return strikethrough;
-    }
-    public void setStrikethrough(boolean strikethrough) {
-        this.strikethrough = strikethrough;
+    public <S extends StyleFormat<?>> S getStyle(String name) {
+        return (S)this.textStyles.get(name);
     }
 }
